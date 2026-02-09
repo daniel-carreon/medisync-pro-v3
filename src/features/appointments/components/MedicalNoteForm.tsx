@@ -17,11 +17,7 @@ export function MedicalNoteForm({ appointmentId, amount }: MedicalNoteFormProps)
     setError(null)
     formData.set('appointment_id', appointmentId)
     formData.set('amount', String(amount))
-    const result = await completeAppointment(formData)
-    if (result?.error) {
-      setError(result.error)
-      setLoading(false)
-    }
+    await completeAppointment(formData)
   }
 
   return (

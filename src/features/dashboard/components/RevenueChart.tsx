@@ -21,7 +21,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
         <BarChart data={chartData}>
           <XAxis dataKey="label" tick={{ fontSize: 12 }} />
           <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `$${v}`} />
-          <Tooltip formatter={(value: number) => [`$${value.toFixed(2)}`, 'Ingresos']} />
+          <Tooltip formatter={(value: number | undefined) => [`$${(value || 0).toFixed(2)}`, 'Ingresos']} />
           <Bar dataKey="total" fill="#2563eb" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>

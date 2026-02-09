@@ -34,11 +34,7 @@ export function NewAppointmentForm({ patients, services }: NewAppointmentFormPro
     if (selectedService) {
       formData.set('duration', String(selectedService.duration_minutes))
     }
-    const result = await createAppointment(formData)
-    if (result?.error) {
-      setError(result.error)
-      setLoading(false)
-    }
+    await createAppointment(formData)
   }
 
   return (

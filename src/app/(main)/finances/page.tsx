@@ -22,9 +22,9 @@ export default async function FinancesPage() {
       .limit(50),
   ])
 
-  const todayRevenue = todayRes.data?.total || 0
-  const weekRevenue = weekRes.data?.total || 0
-  const monthRevenue = monthRes.data?.total || 0
+  const todayRevenue = (todayRes.data as { total?: number } | null)?.total || 0
+  const weekRevenue = (weekRes.data as { total?: number } | null)?.total || 0
+  const monthRevenue = (monthRes.data as { total?: number } | null)?.total || 0
 
   const payments = (paymentsRes.data || []).map((p: Record<string, unknown>) => {
     const apt = p.appointment as Record<string, unknown> | null

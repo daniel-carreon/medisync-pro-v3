@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/server'
 export async function confirmAppointment(appointmentId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Not authenticated' }
+  if (!user) return
 
   await supabase
     .from('appointments')
@@ -22,7 +22,7 @@ export async function confirmAppointment(appointmentId: string) {
 export async function cancelAppointment(appointmentId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Not authenticated' }
+  if (!user) return
 
   await supabase
     .from('appointments')
@@ -37,7 +37,7 @@ export async function cancelAppointment(appointmentId: string) {
 export async function createAppointment(formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Not authenticated' }
+  if (!user) return
 
   const patient_id = formData.get('patient_id') as string
   const service_id = formData.get('service_id') as string
@@ -57,7 +57,7 @@ export async function createAppointment(formData: FormData) {
     status: 'pending',
   })
 
-  if (error) return { error: error.message }
+  if (error) return
 
   revalidatePath('/calendar')
   redirect('/calendar')
@@ -66,7 +66,7 @@ export async function createAppointment(formData: FormData) {
 export async function completeAppointment(formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: 'Not authenticated' }
+  if (!user) return
 
   const appointmentId = formData.get('appointment_id') as string
   const diagnosis = formData.get('diagnosis') as string
@@ -83,7 +83,7 @@ export async function completeAppointment(formData: FormData) {
     prescription: prescription || null,
     private_notes: privateNotes || null,
   })
-  if (noteError) return { error: noteError.message }
+  if (noteError) return
 
   // 2. Create payment
   const { error: payError } = await supabase.from('payments').insert({
@@ -93,7 +93,7 @@ export async function completeAppointment(formData: FormData) {
     status: 'paid',
     payment_method: paymentMethod,
   })
-  if (payError) return { error: payError.message }
+  if (payError) return
 
   // 3. Update appointment status
   const { error: aptError } = await supabase
@@ -101,7 +101,7 @@ export async function completeAppointment(formData: FormData) {
     .update({ status: 'completed' })
     .eq('id', appointmentId)
     .eq('doctor_id', user.id)
-  if (aptError) return { error: aptError.message }
+  if (aptError) return
 
   revalidatePath('/')
   revalidatePath('/calendar')

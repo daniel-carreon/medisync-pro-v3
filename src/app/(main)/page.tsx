@@ -28,9 +28,9 @@ export default async function HomePage() {
   ])
 
   const totalPatients = patientsRes.count || 0
-  const todayApts = todayAptsRes.data?.count || 0
-  const monthRevenue = monthRevenueRes.data?.total || 0
-  const completionRate = completionRes.data?.rate || 0
+  const todayApts = (todayAptsRes.data as { count?: number } | null)?.count || 0
+  const monthRevenue = (monthRevenueRes.data as { total?: number } | null)?.total || 0
+  const completionRate = (completionRes.data as { rate?: number } | null)?.rate || 0
 
   const revenueData = (revenueChartRes.data || []) as { date: string; total: number }[]
 

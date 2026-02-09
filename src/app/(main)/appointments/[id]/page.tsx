@@ -38,6 +38,15 @@ export default async function AppointmentDetailPage({ params }: { params: Promis
 
   const patient = appointment.patient as Record<string, unknown>
   const service = appointment.service as Record<string, unknown>
+  const firstName = String(patient.first_name || '')
+  const lastName = String(patient.last_name || '')
+  const patientEmail = String(patient.email || 'Sin email')
+  const patientPhone = String(patient.phone || 'Sin telefono')
+  const patientAllergies = String(patient.allergies || '')
+  const serviceName = String(service.name || '')
+  const servicePrice = String(service.price || '0')
+  const serviceDuration = String(service.duration_minutes || '0')
+
   const dateStr = format(parseISO(appointment.start_time), "EEEE d 'de' MMMM yyyy, h:mm a", { locale: es })
   const isActive = appointment.status === 'pending' || appointment.status === 'confirmed'
 
@@ -51,22 +60,22 @@ export default async function AppointmentDetailPage({ params }: { params: Promis
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
           <h3 className="text-sm font-medium text-slate-500 mb-3">Paciente</h3>
-          <p className="text-lg font-semibold text-slate-900">{patient.first_name} {patient.last_name}</p>
-          <p className="text-sm text-slate-500 mt-1">{patient.email || 'Sin email'}</p>
-          <p className="text-sm text-slate-500">{patient.phone || 'Sin telefono'}</p>
-          {patient.allergies && (
+          <p className="text-lg font-semibold text-slate-900">{firstName} {lastName}</p>
+          <p className="text-sm text-slate-500 mt-1">{patientEmail}</p>
+          <p className="text-sm text-slate-500">{patientPhone}</p>
+          {patientAllergies && (
             <div className="mt-3 flex items-center gap-2">
               <AlertTriangle className="size-4 text-red-500" />
-              <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">{patient.allergies}</span>
+              <span className="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded-full">{patientAllergies}</span>
             </div>
           )}
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
           <h3 className="text-sm font-medium text-slate-500 mb-3">Servicio</h3>
-          <p className="text-lg font-semibold text-slate-900">{service.name}</p>
-          <p className="text-sm text-slate-500 mt-1">Precio: <span className="font-medium text-slate-900">${Number(service.price).toFixed(2)}</span></p>
-          <p className="text-sm text-slate-500">Duracion: {service.duration_minutes} min</p>
+          <p className="text-lg font-semibold text-slate-900">{serviceName}</p>
+          <p className="text-sm text-slate-500 mt-1">Precio: <span className="font-medium text-slate-900">${Number(servicePrice).toFixed(2)}</span></p>
+          <p className="text-sm text-slate-500">Duracion: {serviceDuration} min</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
@@ -79,7 +88,7 @@ export default async function AppointmentDetailPage({ params }: { params: Promis
       </div>
 
       {isActive && (
-        <MedicalNoteForm appointmentId={id} amount={Number(service.price)} />
+        <MedicalNoteForm appointmentId={id} amount={Number(servicePrice)} />
       )}
 
       {appointment.status === 'completed' && medicalNote && (
